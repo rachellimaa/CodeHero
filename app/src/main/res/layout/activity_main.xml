@@ -50,9 +50,17 @@
             android:layout_marginStart="114dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/robotoregular"
-            android:text="1@string/string_name"
+            android:text="@string/string_name"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_character"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_character_list" />
 
 </LinearLayout>
