@@ -17,4 +17,9 @@ public interface IHero {
                                    @Query("hash") String hash);
 
 
+    @GET("characters?")
+    Call<ResponseHero> getHeroListAll(@Query("ts") String ts,
+                                      @Query("apikey") String apiKey,
+                                      @Query("hash") String hash);
+
 }

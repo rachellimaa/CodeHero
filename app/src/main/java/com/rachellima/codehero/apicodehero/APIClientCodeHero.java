@@ -48,4 +48,27 @@ public class APIClientCodeHero {
         });
     }
 
+    public void getHeroListAll(String timestamp, String hash) {
+        Call<ResponseHero> responseHeroCall = mService.getHeroListAll(timestamp, BuildConfig.API_PUBLIC_KEY, hash);
+        responseHeroCall.enqueue(new Callback<ResponseHero>() {
+            @Override
+            public void onResponse(Call<ResponseHero> call, Response<ResponseHero> response) {
+                if (response.isSuccessful()) {
+                    ResponseHero responseHero = response.body();
+                    Data data = responseHero.getData();
+
+                    EventBus.getDefault().post(new ResultDataEvent(data));
+                    Log.d(TAG, "data " + data);
+                } else {
+                    Log.e(TAG, "onResponse " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseHero> call, Throwable t) {
+                Log.e(TAG, "onFailure " + t);
+            }
+        });
+    }
+
 }

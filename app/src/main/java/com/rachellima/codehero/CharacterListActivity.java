@@ -58,6 +58,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
         setStyleTitle();
         initView();
+        configRetrofit();
 
         mSearchButton.setOnEditorActionListener(
                 (v, actionId, event) -> {
@@ -67,10 +68,10 @@ public class CharacterListActivity extends AppCompatActivity {
                                     event.getAction() == KeyEvent.ACTION_DOWN &&
                                     event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                         if (event == null || !event.isShiftPressed()) {
-                            configRetrofit();
-
-                            if (mSearchButton.getText().toString().isEmpty()){
-
+                            if (mSearchButton.getText().toString().isEmpty()) {
+                                mApiClientCodeHero.getHeroListAll(generateTimestamp(), generateMd5());
+                            } else {
+                                getHeroList();
                             }
 
                             return true;
@@ -118,6 +119,9 @@ public class CharacterListActivity extends AppCompatActivity {
     private void configRetrofit() {
         IHero mService = ServiceGenerator.createService(IHero.class);
         mApiClientCodeHero = new APIClientCodeHero(mService);
+    }
+
+    private void getHeroList() {
         mApiClientCodeHero.getHeroList(searchCharacters(), 4, 0, generateTimestamp(), generateMd5());
     }
 
