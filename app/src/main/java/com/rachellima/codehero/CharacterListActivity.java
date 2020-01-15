@@ -68,6 +68,7 @@ public class CharacterListActivity extends AppCompatActivity {
                                     event.getAction() == KeyEvent.ACTION_DOWN &&
                                     event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                         if (event == null || !event.isShiftPressed()) {
+                            mResultList.clear();
                             if (mSearchButton.getText().toString().isEmpty()) {
                                 mApiClientCodeHero.getHeroListAll(generateTimestamp(), generateMd5());
                             } else {
