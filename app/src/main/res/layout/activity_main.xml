@@ -32,6 +32,7 @@
         android:text="@string/string_character" />
 
     <EditText
+        android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="31dp"
         android:layout_marginStart="45dp"
@@ -55,12 +56,25 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_character"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        tools:itemCount="4"
-        tools:listitem="@layout/item_character_list" />
+        android:layout_height="wrap_content">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_character"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"
+            tools:itemCount="6"
+            tools:listitem="@layout/item_character_list" />
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </LinearLayout>
 </LinearLayout>

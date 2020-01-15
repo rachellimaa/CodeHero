@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TypefaceSpan;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,13 +37,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CharacterListActivity extends AppCompatActivity {
-    private TextView mTitle;
     private APIClientCodeHero mApiClientCodeHero;
     private List<Result> mResultList;
     private AdapterResultList mAdapterRepositoryList;
 
+    @BindView(R.id.text_title)
+    TextView mTitle;
+
     @BindView(R.id.recyclerView_character)
     RecyclerView mRecyclerViewHero;
+
+    @BindView(R.id.search)
+    EditText mSearchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +57,32 @@ public class CharacterListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setStyleTitle();
-        configRetrofit();
         initView();
+
+        mSearchButton.setOnEditorActionListener(
+                (v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                            actionId == EditorInfo.IME_ACTION_DONE ||
+                            event != null &&
+                                    event.getAction() == KeyEvent.ACTION_DOWN &&
+                                    event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        if (event == null || !event.isShiftPressed()) {
+                            configRetrofit();
+
+                            if (mSearchButton.getText().toString().isEmpty()){
+
+                            }
+
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+        );
     }
 
+
     private void setStyleTitle() {
-        mTitle = findViewById(R.id.text_title);
         Typeface typefaceRobotoBold = Typeface.create(ResourcesCompat.getFont(this, R.font.robotoblack),
                 Typeface.NORMAL);
         Typeface typefaceRobotoLight = Typeface.create(ResourcesCompat.getFont(this, R.font.robotolight),
@@ -65,6 +93,10 @@ public class CharacterListActivity extends AppCompatActivity {
             string.setSpan(new TypefaceSpan(typefaceRobotoLight), 13, 28, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             mTitle.setText(string);
         }
+    }
+
+    private String searchCharacters() {
+        return mSearchButton.getText().toString();
     }
 
     private void initView() {
@@ -86,7 +118,7 @@ public class CharacterListActivity extends AppCompatActivity {
     private void configRetrofit() {
         IHero mService = ServiceGenerator.createService(IHero.class);
         mApiClientCodeHero = new APIClientCodeHero(mService);
-        mApiClientCodeHero.getHeroList("iron man", 4, 0, generateTimestamp(), generateMd5());
+        mApiClientCodeHero.getHeroList(searchCharacters(), 4, 0, generateTimestamp(), generateMd5());
     }
 
     @Override

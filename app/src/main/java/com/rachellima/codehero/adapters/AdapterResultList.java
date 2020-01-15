@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.rachellima.codehero.R;
 import com.rachellima.codehero.model.Result;
+import com.rachellima.codehero.model.Thumbnail;
 
 import java.util.List;
 
@@ -21,8 +22,8 @@ import butterknife.ButterKnife;
 
 public class AdapterResultList extends RecyclerView.Adapter<AdapterResultList.ViewHolderRepository> {
 
-    List<Result> mResult;
-    Context mContext;
+    private List<Result> mResult;
+    private Context mContext;
 
     public static class ViewHolderRepository extends RecyclerView.ViewHolder {
 
@@ -60,10 +61,12 @@ public class AdapterResultList extends RecyclerView.Adapter<AdapterResultList.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolderRepository holder, int position) {
         final Result result = mResult.get(position);
+        final Thumbnail thumbnail = result.getThumbnail();
+        final String aspectRatio = "/portrait_medium.";
 
         holder.mNameCharacter.setText(result.getNameHero());
         Glide.with(mContext)
-                .load(result.getThumbnail().getPathImage() + "/portrait_medium." + result.getThumbnail().getExtensionImage())
+                .load(thumbnail.getPathImage() + aspectRatio + thumbnail.getExtensionImage())
                 .into(holder.mPhotoCharacter);
 
         holder.getResults(result);
