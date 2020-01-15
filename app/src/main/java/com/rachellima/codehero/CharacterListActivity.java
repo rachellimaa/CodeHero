@@ -13,12 +13,12 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rachellima.codehero.adapters.AdapterHeroList;
+import com.rachellima.codehero.adapters.AdapterResultList;
 import com.rachellima.codehero.apicodehero.APIClientCodeHero;
 import com.rachellima.codehero.apicodehero.service.IHero;
 import com.rachellima.codehero.apicodehero.service.ServiceGenerator;
-import com.rachellima.codehero.events.HeroListEvent;
-import com.rachellima.codehero.model.Hero;
+import com.rachellima.codehero.events.ResultDataEvent;
+import com.rachellima.codehero.model.Result;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,9 +26,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,8 +36,8 @@ import butterknife.ButterKnife;
 public class CharacterListActivity extends AppCompatActivity {
     private TextView mTitle;
     private APIClientCodeHero mApiClientCodeHero;
-    private List<Hero> mHerosList;
-    private AdapterHeroList mAdapterRepositoryList;
+    private List<Result> mResultList;
+    private AdapterResultList mAdapterRepositoryList;
 
     @BindView(R.id.recyclerView_character)
     RecyclerView mRecyclerViewHero;
@@ -69,17 +68,17 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        mHerosList = new ArrayList<>();
+        mResultList = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerViewHero.setLayoutManager(linearLayoutManager);
-        mAdapterRepositoryList = new AdapterHeroList(mHerosList, getApplicationContext());
+        mAdapterRepositoryList = new AdapterResultList(mResultList, getApplicationContext());
         mRecyclerViewHero.setAdapter(mAdapterRepositoryList);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onHeroListEvent(HeroListEvent event) {
+    public void onHeroListEvent(ResultDataEvent event) {
         if (event != null) {
-            mHerosList.addAll(event.getHeroes());
+            mResultList.addAll(Arrays.asList(event.getData().getResultList()));
             mAdapterRepositoryList.notifyDataSetChanged();
         }
     }
@@ -87,7 +86,7 @@ public class CharacterListActivity extends AppCompatActivity {
     private void configRetrofit() {
         IHero mService = ServiceGenerator.createService(IHero.class);
         mApiClientCodeHero = new APIClientCodeHero(mService);
-        mApiClientCodeHero.getHeroList("iron man", 4, 0, generateTimestamp(),generateMd5());
+        mApiClientCodeHero.getHeroList("iron man", 4, 0, generateTimestamp(), generateMd5());
     }
 
     @Override
@@ -104,8 +103,8 @@ public class CharacterListActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    private String generateTimestamp(){
-        Long tsLong = System.currentTimeMillis()/1000;
+    private String generateTimestamp() {
+        Long tsLong = System.currentTimeMillis() / 1000;
         String ts = tsLong.toString();
         return ts;
     }

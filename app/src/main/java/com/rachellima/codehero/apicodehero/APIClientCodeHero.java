@@ -6,15 +6,12 @@ import androidx.annotation.NonNull;
 
 import com.rachellima.codehero.BuildConfig;
 import com.rachellima.codehero.apicodehero.service.IHero;
-import com.rachellima.codehero.events.HeroListEvent;
-import com.rachellima.codehero.model.Hero;
-import com.rachellima.codehero.model.HeroList;
+import com.rachellima.codehero.events.ResultDataEvent;
+import com.rachellima.codehero.model.Data;
+import com.rachellima.codehero.model.ResponseHero;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.List;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,25 +26,24 @@ public class APIClientCodeHero {
     }
 
     public void getHeroList(String name, int limit, int offset, String timestamp, String hash) {
-        Call<HeroList> heroList = mService.getHeroList(name, limit, offset, timestamp, BuildConfig.API_PUBLIC_KEY, hash);
-        heroList.enqueue(new Callback<HeroList>() {
+        Call<ResponseHero> responseCall = mService.getHeroList(name, limit, offset, timestamp, BuildConfig.API_PUBLIC_KEY, hash);
+        responseCall.enqueue(new Callback<ResponseHero>() {
             @Override
-            public void onResponse(@NonNull Call<HeroList> call, @NonNull Response<HeroList> response) {
+            public void onResponse(@NonNull Call<ResponseHero> call, @NonNull Response<ResponseHero> response) {
                 if (response.isSuccessful()) {
-                    HeroList heroList = response.body();
-                    List<Hero> heroes = heroList.getHeroesList();
+                    ResponseHero responseHero = response.body();
+                    Data data = responseHero.getData();
 
-                    EventBus.getDefault().post(new HeroListEvent(heroes));
-                    Log.d(TAG, "repository " + heroes);
+                    EventBus.getDefault().post(new ResultDataEvent(data));
+                    Log.d(TAG, "data " + data);
                 } else {
-                    ResponseBody responseBody = response.errorBody();
-                    Log.d(TAG, "error " + responseBody);
+                    Log.e(TAG, "onResponse " + response);
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<HeroList> call, @NonNull Throwable t) {
-                Log.e(TAG, "error " + t);
+            public void onFailure(@NonNull Call<ResponseHero> call, @NonNull Throwable t) {
+                Log.e(TAG, "onFailure " + t);
             }
         });
     }

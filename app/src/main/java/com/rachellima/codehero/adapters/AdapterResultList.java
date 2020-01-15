@@ -10,19 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.rachellima.codehero.R;
-import com.rachellima.codehero.model.Hero;
-import com.squareup.picasso.Picasso;
+import com.rachellima.codehero.model.Result;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AdapterHeroList extends RecyclerView.Adapter<AdapterHeroList.ViewHolderRepository> {
+public class AdapterResultList extends RecyclerView.Adapter<AdapterResultList.ViewHolderRepository> {
 
-    List<Hero> mHeroes;
-    private Context mContext;
+    List<Result> mResult;
+    Context mContext;
 
     public static class ViewHolderRepository extends RecyclerView.ViewHolder {
 
@@ -32,7 +32,7 @@ public class AdapterHeroList extends RecyclerView.Adapter<AdapterHeroList.ViewHo
         @BindView(R.id.photo_character)
         ImageView mPhotoCharacter;
 
-        Hero hero;
+        Result result;
 
 
         public ViewHolderRepository(View itemView) {
@@ -40,13 +40,13 @@ public class AdapterHeroList extends RecyclerView.Adapter<AdapterHeroList.ViewHo
             ButterKnife.bind(this, itemView);
         }
 
-        private void getRepository(Hero hero) {
-            this.hero = hero;
+        private void getResults(Result result) {
+            this.result = result;
         }
     }
 
-    public AdapterHeroList(List<Hero> mHeroes, Context context) {
-        this.mHeroes = mHeroes;
+    public AdapterResultList(List<Result> mResult, Context context) {
+        this.mResult = mResult;
         this.mContext = context;
     }
 
@@ -59,16 +59,19 @@ public class AdapterHeroList extends RecyclerView.Adapter<AdapterHeroList.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderRepository holder, int position) {
-        final Hero hero = mHeroes.get(position);
+        final Result result = mResult.get(position);
 
-        holder.mNameCharacter.setText(hero.getHeroName());
-       /* Picasso.get().load(hero.getHeroImage()).into(holder.mPhotoCharacter);*/
+        holder.mNameCharacter.setText(result.getNameHero());
+        Glide.with(mContext)
+                .load(result.getThumbnail().getPathImage() + "/portrait_medium." + result.getThumbnail().getExtensionImage())
+                .into(holder.mPhotoCharacter);
 
+        holder.getResults(result);
     }
 
     @Override
     public int getItemCount() {
-        return mHeroes.size();
+        return mResult.size();
     }
 
 }
