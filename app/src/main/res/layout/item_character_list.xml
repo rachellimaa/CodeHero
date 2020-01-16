@@ -21,8 +21,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/photo_character"
-                android:layout_width="98dp"
-                android:layout_height="98dp" />
+                android:layout_width="93dp"
+                android:layout_height="93dp" />
         </LinearLayout>
 
         <TextView

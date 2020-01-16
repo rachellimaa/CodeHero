@@ -3,4 +3,7 @@
     <string name="text_title">Busca Marvel Teste Front-End</string>
     <string name="string_character">Nome do Personagem</string>
     <string name="string_name">Nome</string>
+    <string name="string_one">1</string>
+    <string name="string_two">2</string>
+    <string name="string_three">3</string>
 </resources>

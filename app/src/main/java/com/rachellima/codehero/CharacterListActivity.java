@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TypefaceSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +56,27 @@ public class CharacterListActivity extends AppCompatActivity {
     @BindView(R.id.search)
     EditText mSearchButton;
 
+    @BindView(R.id.arrow_left)
+    ImageView mArrowLeft;
+
+    @BindView(R.id.arrow_right)
+    ImageView mArrowRight;
+
+    @BindView(R.id.first_page)
+    Button mFirstPage;
+
+    @BindView(R.id.second_page)
+    Button mSecondPage;
+
+    @BindView(R.id.third_page)
+    Button mThirdPage;
+
+    @BindView(R.id.layout_buttons)
+    LinearLayout mLayoutButtons;
+
+    @BindView(R.id.footer)
+    LinearLayout mFooter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +109,14 @@ public class CharacterListActivity extends AppCompatActivity {
                     return false;
                 }
         );
+        setStatesButtons();
     }
 
+    private void setStatesButtons() {
+        mFirstPage.setSelected(false);
+        mSecondPage.setSelected(false);
+        mThirdPage.setSelected(false);
+    }
 
     private void setStyleTitle() {
         Typeface typefaceRobotoBold = Typeface.create(ResourcesCompat.getFont(this, R.font.robotoblack),
@@ -116,6 +145,13 @@ public class CharacterListActivity extends AppCompatActivity {
         mRecyclerViewHero.setHasFixedSize(false);
     }
 
+    /*@OnClick(R.id.second_page)
+    void goToSecondPage(View view) {
+        if (mResultList.size() > 0){
+
+        }
+    }
+*/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onHeroListEvent(ResultDataEvent event) {
         if (event != null) {
@@ -153,10 +189,10 @@ public class CharacterListActivity extends AppCompatActivity {
         return ts;
     }
 
-    private void hideKeyboard(){
+    private void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
