@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -185,6 +186,8 @@ public class CharacterListActivity extends AppCompatActivity {
         if (event != null) {
             mResultList.addAll(Arrays.asList(event.getData().getResultList()));
             mAdapterRepositoryList.notifyDataSetChanged();
+
+            if (mResultList.isEmpty()) Toast.makeText(this, "No Results", Toast.LENGTH_LONG).show();
         }
     }
 
