@@ -58,14 +58,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="500dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_character"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginTop="20dp"
-            tools:itemCount="6"
+            tools:itemCount="10"
             tools:listitem="@layout/item_character_list" />
 
     </ScrollView>
@@ -73,11 +73,14 @@
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="rachel limaaaaaa"/>
     </LinearLayout>
 </LinearLayout>

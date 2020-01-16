@@ -1,13 +1,17 @@
 package com.rachellima.codehero;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TypefaceSpan;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -68,6 +72,7 @@ public class CharacterListActivity extends AppCompatActivity {
                                     event.getAction() == KeyEvent.ACTION_DOWN &&
                                     event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                         if (event == null || !event.isShiftPressed()) {
+                            hideKeyboard();
                             mResultList.clear();
                             if (mSearchButton.getText().toString().isEmpty()) {
                                 mApiClientCodeHero.getHeroListAll(generateTimestamp(), generateMd5());
@@ -107,6 +112,8 @@ public class CharacterListActivity extends AppCompatActivity {
         mRecyclerViewHero.setLayoutManager(linearLayoutManager);
         mAdapterRepositoryList = new AdapterResultList(mResultList, getApplicationContext());
         mRecyclerViewHero.setAdapter(mAdapterRepositoryList);
+        mRecyclerViewHero.setNestedScrollingEnabled(false);
+        mRecyclerViewHero.setHasFixedSize(false);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -144,6 +151,14 @@ public class CharacterListActivity extends AppCompatActivity {
         Long tsLong = System.currentTimeMillis() / 1000;
         String ts = tsLong.toString();
         return ts;
+    }
+
+    private void hideKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private String generateMd5() {
