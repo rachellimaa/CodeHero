@@ -41,11 +41,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class CharacterListActivity extends AppCompatActivity {
     private APIClientCodeHero mApiClientCodeHero;
     private List<Result> mResultList;
     private AdapterResultList mAdapterRepositoryList;
+    Paginator p = new Paginator();
+    private int totalPages = Paginator.TOTAL_NUM_ITEMS / Paginator.ITEMS_PER_PAGE;
+    private int currentPage = 0;
 
     @BindView(R.id.text_title)
     TextView mTitle;
@@ -57,10 +61,10 @@ public class CharacterListActivity extends AppCompatActivity {
     EditText mSearchButton;
 
     @BindView(R.id.arrow_left)
-    ImageView mArrowLeft;
+    ImageView mArrowPrevious;
 
     @BindView(R.id.arrow_right)
-    ImageView mArrowRight;
+    ImageView mArrowNext;
 
     @BindView(R.id.first_page)
     Button mFirstPage;
@@ -112,6 +116,19 @@ public class CharacterListActivity extends AppCompatActivity {
         setStatesButtons();
     }
 
+    private void toggleButtons() {
+        if (currentPage == totalPages) {
+            mArrowNext.setEnabled(false);
+            mArrowPrevious.setEnabled(true);
+        } else if (currentPage == 0) {
+            mArrowPrevious.setEnabled(false);
+            mArrowNext.setEnabled(true);
+        } else if (currentPage >= 1 && currentPage <= totalPages) {
+            mArrowPrevious.setEnabled(true);
+            mArrowNext.setEnabled(true);
+        }
+    }
+
     private void setStatesButtons() {
         mFirstPage.setSelected(false);
         mSecondPage.setSelected(false);
@@ -139,19 +156,30 @@ public class CharacterListActivity extends AppCompatActivity {
         mResultList = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerViewHero.setLayoutManager(linearLayoutManager);
-        mAdapterRepositoryList = new AdapterResultList(mResultList, getApplicationContext());
+        mAdapterRepositoryList = new AdapterResultList(getApplicationContext(), mResultList, p.generatePage(currentPage));
         mRecyclerViewHero.setAdapter(mAdapterRepositoryList);
         mRecyclerViewHero.setNestedScrollingEnabled(false);
         mRecyclerViewHero.setHasFixedSize(false);
     }
 
-    /*@OnClick(R.id.second_page)
-    void goToSecondPage(View view) {
-        if (mResultList.size() > 0){
-
+    @OnClick(R.id.arrow_right)
+    void goToNextPage(View view) {
+        if (mResultList.size() > 0) {
+            currentPage += 1;
+            mAdapterRepositoryList.notifyDataSetChanged();
+            toggleButtons();
         }
     }
-*/
+
+    @OnClick(R.id.arrow_left)
+    void goToPreviousPage(View view) {
+        if (mResultList.size() > 0) {
+            currentPage -= 1;
+            mAdapterRepositoryList.notifyDataSetChanged();
+            toggleButtons();
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onHeroListEvent(ResultDataEvent event) {
         if (event != null) {
