@@ -74,11 +74,13 @@
 
         <ImageView
             android:id="@+id/arrow_left"
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:rotation="134"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/arrow_left" />
+            android:tint="@color/colorRed"
+            android:src="@drawable/arrow_triangle" />
 
         <LinearLayout
             android:id="@+id/layout_buttons"
@@ -96,20 +98,20 @@
                 android:focusable="true"
                 android:text="@string/string_one"
                 android:textColor="@android:color/holo_red_dark"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/second_page"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:background="@drawable/selector_state_button"
                 android:clickable="true"
                 android:focusable="true"
                 android:text="@string/string_two"
                 android:textColor="@android:color/holo_red_dark"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/third_page"
@@ -121,16 +123,18 @@
                 android:focusable="true"
                 android:text="@string/string_three"
                 android:textColor="@android:color/holo_red_dark"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/arrow_right"
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:tint="@color/colorRed"
+            android:rotation="315"
+            android:layout_height="50dp"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/arrow_right" />
+            android:src="@drawable/arrow_triangle" />
     </LinearLayout>
 </LinearLayout>

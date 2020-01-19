@@ -218,7 +218,7 @@ public class CharacterListActivity extends AppCompatActivity {
             mResultList.addAll(Arrays.asList(event.getData().getResultList()));
             mAdapterRepositoryList.notifyDataSetChanged();
 
-            if (mResultList.isEmpty()) Toast.makeText(this, "No Results", Toast.LENGTH_LONG).show();
+            if (mResultList.isEmpty()) Toast.makeText(this, "Sem Resultados!!", Toast.LENGTH_LONG).show();
         }
 
             int rem = mResultList.size() % ROW_SIZE;
