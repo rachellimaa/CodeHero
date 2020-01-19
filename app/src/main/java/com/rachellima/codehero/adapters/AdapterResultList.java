@@ -23,7 +23,6 @@ import butterknife.ButterKnife;
 public class AdapterResultList extends RecyclerView.Adapter<AdapterResultList.ViewHolderRepository> {
 
     private List<Result> mResult;
-    private List<Integer> mIndices;
     private Context mContext;
 
     public static class ViewHolderRepository extends RecyclerView.ViewHolder {
@@ -47,8 +46,7 @@ public class AdapterResultList extends RecyclerView.Adapter<AdapterResultList.Vi
         }
     }
 
-    public AdapterResultList(Context context, List<Result> mResult, List<Integer> mIndices) {
-        this.mIndices = mIndices;
+    public AdapterResultList(Context context, List<Result> mResult) {
         this.mResult = mResult;
         this.mContext = context;
     }

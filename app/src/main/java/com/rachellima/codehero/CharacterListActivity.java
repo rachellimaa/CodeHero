@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.TypefaceSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,8 +47,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CharacterListActivity extends AppCompatActivity {
+    public static final int ROW_SIZE = 4;
+
     private APIClientCodeHero mApiClientCodeHero;
     private List<Result> mResultList;
+    private List<Result> mResultListTemp;
     private AdapterResultList mAdapterRepositoryList;
     Paginator p = new Paginator();
     private int totalPages = Paginator.TOTAL_NUM_ITEMS / Paginator.ITEMS_PER_PAGE;
@@ -155,29 +160,55 @@ public class CharacterListActivity extends AppCompatActivity {
 
     private void initView() {
         mResultList = new ArrayList<>();
+        mResultListTemp = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerViewHero.setLayoutManager(linearLayoutManager);
-        mAdapterRepositoryList = new AdapterResultList(getApplicationContext(), mResultList, p.generatePage(currentPage));
+        mAdapterRepositoryList = new AdapterResultList(getApplicationContext(), mResultListTemp);
         mRecyclerViewHero.setAdapter(mAdapterRepositoryList);
         mRecyclerViewHero.setNestedScrollingEnabled(false);
         mRecyclerViewHero.setHasFixedSize(false);
     }
 
-    @OnClick(R.id.arrow_right)
-    void goToNextPage(View view) {
+    @OnClick(R.id.first_page)
+    void goToFirstPage(View view) {
         if (mResultList.size() > 0) {
-            currentPage += 1;
-            mAdapterRepositoryList.notifyDataSetChanged();
-            toggleButtons();
+            additem(0);
+            updateStatesFirstButton();
         }
     }
 
-    @OnClick(R.id.arrow_left)
-    void goToPreviousPage(View view) {
+    private void updateStatesFirstButton() {
+        mFirstPage.setSelected(true);
+        mSecondPage.setSelected(false);
+        mThirdPage.setSelected(false);
+        mFirstPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+        mSecondPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
+        mThirdPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
+    }
+
+    @OnClick(R.id.second_page)
+    void goToSecondPage(View view) {
         if (mResultList.size() > 0) {
-            currentPage -= 1;
-            mAdapterRepositoryList.notifyDataSetChanged();
-            toggleButtons();
+            additem(2);
+            mFirstPage.setSelected(false);
+            mThirdPage.setSelected(false);
+            mSecondPage.setSelected(true);
+            mFirstPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
+            mSecondPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+            mThirdPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
+        }
+    }
+
+    @OnClick(R.id.third_page)
+    void goToThirdPage(View view) {
+        if (mResultList.size() > 0) {
+            additem(3);
+            mThirdPage.setSelected(true);
+            mFirstPage.setSelected(false);
+            mSecondPage.setSelected(false);
+            mFirstPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
+            mSecondPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
+            mThirdPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
         }
     }
 
@@ -189,6 +220,33 @@ public class CharacterListActivity extends AppCompatActivity {
 
             if (mResultList.isEmpty()) Toast.makeText(this, "No Results", Toast.LENGTH_LONG).show();
         }
+
+            int rem = mResultList.size() % ROW_SIZE;
+
+            Log.d("XX ", "rem " + rem);
+
+            if (rem > 0) {
+                for (int i = 0; i < ROW_SIZE - rem; i++) {
+                    mResultList.add(null);
+                }
+            }
+            additem(0);
+        }
+
+    private void additem(int i) {
+
+        if (i == 0) {
+            updateStatesFirstButton();
+        }
+
+        mResultListTemp.clear();
+        i = i * ROW_SIZE;
+        Log.d("XX ", "add item (i) " + i);
+        for (int j = 0; j < ROW_SIZE; j++) {
+            mResultListTemp.add(j, mResultList.get(i));
+            i = i + 1;
+        }
+        mAdapterRepositoryList.notifyDataSetChanged();
     }
 
     private void configRetrofit() {
