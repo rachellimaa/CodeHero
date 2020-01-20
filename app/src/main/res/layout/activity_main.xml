@@ -70,71 +70,41 @@
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/arrow_left"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:rotation="134"
             android:clickable="true"
             android:focusable="true"
-            android:tint="@color/colorRed"
-            android:src="@drawable/arrow_triangle" />
+            android:rotation="134"
+            android:src="@drawable/arrow_triangle"
+            android:tint="@color/colorRed" />
 
-        <LinearLayout
-            android:id="@+id/layout_buttons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <HorizontalScrollView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/first_page"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/selector_state_button"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/string_one"
-                android:textColor="@android:color/holo_red_dark"
-                android:textSize="18sp" />
+            <LinearLayout
+                android:id="@+id/layout_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/second_page"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/selector_state_button"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/string_two"
-                android:textColor="@android:color/holo_red_dark"
-                android:textSize="18sp" />
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/third_page"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/selector_state_button"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/string_three"
-                android:textColor="@android:color/holo_red_dark"
-                android:textSize="18sp" />
-
-        </LinearLayout>
+        </HorizontalScrollView>
 
         <ImageView
             android:id="@+id/arrow_right"
             android:layout_width="50dp"
-            android:tint="@color/colorRed"
-            android:rotation="315"
             android:layout_height="50dp"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/arrow_triangle" />
+            android:rotation="315"
+            android:src="@drawable/arrow_triangle"
+            android:tint="@color/colorRed" />
     </LinearLayout>
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -53,9 +54,7 @@ public class CharacterListActivity extends AppCompatActivity {
     private List<Result> mResultList;
     private List<Result> mResultListTemp;
     private AdapterResultList mAdapterRepositoryList;
-    Paginator p = new Paginator();
-    private int totalPages = Paginator.TOTAL_NUM_ITEMS / Paginator.ITEMS_PER_PAGE;
-    private int currentPage = 0;
+    private int EnabledButton = 0;
 
     @BindView(R.id.text_title)
     TextView mTitle;
@@ -71,15 +70,6 @@ public class CharacterListActivity extends AppCompatActivity {
 
     @BindView(R.id.arrow_right)
     ImageView mArrowNext;
-
-    @BindView(R.id.first_page)
-    Button mFirstPage;
-
-    @BindView(R.id.second_page)
-    Button mSecondPage;
-
-    @BindView(R.id.third_page)
-    Button mThirdPage;
 
     @BindView(R.id.layout_buttons)
     LinearLayout mLayoutButtons;
@@ -119,26 +109,6 @@ public class CharacterListActivity extends AppCompatActivity {
                     return false;
                 }
         );
-        setStatesButtons();
-    }
-
-    private void toggleButtons() {
-        if (currentPage == totalPages) {
-            mArrowNext.setEnabled(false);
-            mArrowPrevious.setEnabled(true);
-        } else if (currentPage == 0) {
-            mArrowPrevious.setEnabled(false);
-            mArrowNext.setEnabled(true);
-        } else if (currentPage >= 1 && currentPage <= totalPages) {
-            mArrowPrevious.setEnabled(true);
-            mArrowNext.setEnabled(true);
-        }
-    }
-
-    private void setStatesButtons() {
-        mFirstPage.setSelected(false);
-        mSecondPage.setSelected(false);
-        mThirdPage.setSelected(false);
     }
 
     private void setStyleTitle() {
@@ -169,47 +139,14 @@ public class CharacterListActivity extends AppCompatActivity {
         mRecyclerViewHero.setHasFixedSize(false);
     }
 
-    @OnClick(R.id.first_page)
-    void goToFirstPage(View view) {
-        if (mResultList.size() > 0) {
-            additem(0);
-            updateStatesFirstButton();
-        }
+    @OnClick(R.id.arrow_right)
+    void goToNextPage(View view) {
+
     }
 
-    private void updateStatesFirstButton() {
-        mFirstPage.setSelected(true);
-        mSecondPage.setSelected(false);
-        mThirdPage.setSelected(false);
-        mFirstPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-        mSecondPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
-        mThirdPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
-    }
+    @OnClick(R.id.arrow_left)
+    void goToPreviousPage(View view) {
 
-    @OnClick(R.id.second_page)
-    void goToSecondPage(View view) {
-        if (mResultList.size() > 0) {
-            additem(2);
-            mFirstPage.setSelected(false);
-            mThirdPage.setSelected(false);
-            mSecondPage.setSelected(true);
-            mFirstPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
-            mSecondPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-            mThirdPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
-        }
-    }
-
-    @OnClick(R.id.third_page)
-    void goToThirdPage(View view) {
-        if (mResultList.size() > 0) {
-            additem(3);
-            mThirdPage.setSelected(true);
-            mFirstPage.setSelected(false);
-            mSecondPage.setSelected(false);
-            mFirstPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
-            mSecondPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
-            mThirdPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -217,28 +154,58 @@ public class CharacterListActivity extends AppCompatActivity {
         if (event != null) {
             mResultList.addAll(Arrays.asList(event.getData().getResultList()));
             mAdapterRepositoryList.notifyDataSetChanged();
+            mFooter.setVisibility(View.VISIBLE);
 
-            if (mResultList.isEmpty()) Toast.makeText(this, "Sem Resultados!!", Toast.LENGTH_LONG).show();
-        }
+            if (mResultList.isEmpty()) {
+                Toast.makeText(this, "Nenhum Resultado Encontrado!!", Toast.LENGTH_LONG).show();
+            } else {
+                int rem = mResultList.size() % ROW_SIZE;
+                if (rem > 0) {
+                    for (int i = 0; i < ROW_SIZE - rem; i++) {
+                        mResultList.add(null);
+                    }
+                }
+                additem(0);
 
-            int rem = mResultList.size() % ROW_SIZE;
+                int size = mResultList.size() / ROW_SIZE;
+                for (int j = 0; j < size; j++) {
+                    final int k;
+                    k = j;
 
-            Log.d("XX ", "rem " + rem);
+                    final Button mButtonPage = new Button(this);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(120, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(5, 2, 10, 2);
+                    mButtonPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
+                    mButtonPage.setTextSize(18);
+                    mButtonPage.setId(j);
+                    mButtonPage.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.selector_state_button));
+                    mButtonPage.setText(String.valueOf(j + 1));
+                    mLayoutButtons.addView(mButtonPage, lp);
 
-            if (rem > 0) {
-                for (int i = 0; i < ROW_SIZE - rem; i++) {
-                    mResultList.add(null);
+                    mButtonPage.setOnClickListener(v -> {
+                        additem(k);
+
+                        EnabledButton = mButtonPage.getId();
+                        deselectButtons(k);
+                        mButtonPage.setSelected(true);
+                        mButtonPage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                    });
                 }
             }
-            additem(0);
         }
+    }
+
+    private void deselectButtons(int num) {
+        for (int i = 0; i < num; i++) {
+            if (EnabledButton != i) {
+                this.findViewById(i).setSelected(false);
+                Button button = this.findViewById(i);
+                button.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorRed));
+            }
+        }
+    }
 
     private void additem(int i) {
-
-        if (i == 0) {
-            updateStatesFirstButton();
-        }
-
         mResultListTemp.clear();
         i = i * ROW_SIZE;
         Log.d("XX ", "add item (i) " + i);
@@ -246,7 +213,9 @@ public class CharacterListActivity extends AppCompatActivity {
             mResultListTemp.add(j, mResultList.get(i));
             i = i + 1;
         }
+
         mAdapterRepositoryList.notifyDataSetChanged();
+
     }
 
     private void configRetrofit() {

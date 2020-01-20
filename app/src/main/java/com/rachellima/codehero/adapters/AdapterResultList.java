@@ -19,13 +19,16 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class AdapterResultList extends RecyclerView.Adapter<AdapterResultList.ViewHolderRepository> {
+public class AdapterResultList extends RecyclerView.Adapter<AdapterResultList.ViewHolderHeroes> {
 
     private List<Result> mResult;
     private Context mContext;
+    private final View.OnClickListener mOnClickListener = null;
+    int selectedPos = 0;
 
-    public static class ViewHolderRepository extends RecyclerView.ViewHolder {
+    public class ViewHolderHeroes extends RecyclerView.ViewHolder {
 
         @BindView(R.id.name_character)
         TextView mNameCharacter;
@@ -35,15 +38,22 @@ public class AdapterResultList extends RecyclerView.Adapter<AdapterResultList.Vi
 
         Result result;
 
+        @OnClick(R.id.item)
+        void onClick(View view) {
 
-        public ViewHolderRepository(View itemView) {
+        }
+
+        public ViewHolderHeroes(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
+
         private void getResults(Result result) {
             this.result = result;
         }
+
+
     }
 
     public AdapterResultList(Context context, List<Result> mResult) {
@@ -53,13 +63,14 @@ public class AdapterResultList extends RecyclerView.Adapter<AdapterResultList.Vi
 
     @NonNull
     @Override
-    public ViewHolderRepository onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolderHeroes onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_character_list, parent, false);
-        return new ViewHolderRepository(v);
+
+        return new ViewHolderHeroes(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderRepository holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolderHeroes holder, int position) {
         final Result result = mResult.get(position);
         final Thumbnail thumbnail = result.getThumbnail();
         final String aspectRatio = "/portrait_medium.";
@@ -76,48 +87,5 @@ public class AdapterResultList extends RecyclerView.Adapter<AdapterResultList.Vi
     public int getItemCount() {
         return mResult.size();
     }
-
-/*
-
-    package com.tutorials.hp.recyclerpagination.mRecycler;
-
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.tutorials.hp.recyclerpagination.R;
-
-import java.util.ArrayList;
-
-    public class MyAdapter extends RecyclerView.Adapter<MyViewHolder>  {
-        Context c;
-        ArrayList<String> spacecrafts;
-        public MyAdapter(Context c, ArrayList<String> spacecrafts) {
-            this.c = c;
-            this.spacecrafts = spacecrafts;
-        }
-
-        //INITIALIZE VH
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.model,parent,false);
-            return new MyViewHolder(v);
-        }
-        @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
-            //BIND DATA
-            holder.nametxt.setText(spacecrafts.get(position));
-        }
-        //TOTAL NUM
-        @Override
-        public int getItemCount() {
-            return spacecrafts.size();
-        }
-    }
-*/
-
 
 }
